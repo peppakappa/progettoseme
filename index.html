@@ -17,6 +17,7 @@
             background-color: #800020; /* Sfondo bordeaux */
             font-family: 'Georgia', serif;
             color: white;
+            position: relative;
         }
 
         .welcome-box, .menu-container {
@@ -59,6 +60,29 @@
 
         .g-recaptcha {
             margin-top: 30px; /* Spazio tra il pulsante e il CAPTCHA */
+        }
+
+        .resolution-widget {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1rem;
+            color: white;
+            text-align: center;
+        }
+
+        #qrcode {
+            margin-top: 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        #qrcode img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
         }
 
         /* Stile per il menu */
@@ -116,12 +140,18 @@
             color: white;
         }
     </style>
+    <!-- Includi lo script di reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    <!-- Includi la libreria qrcode.js -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
     <script>
         // Funzione per passare alla pagina del menu
         function goToMenu() {
             document.querySelector(".welcome-box").style.display = "none";
             document.querySelector(".g-recaptcha").style.display = "none";
+            document.getElementById("qrcode").style.display = "none";
             document.getElementById("menu").style.display = "block";
+            updateResolutionAndQRCode(); // Aggiorna il QR code nella pagina del menu
         }
 
         // Funzione per tornare alla pagina di benvenuto
@@ -129,6 +159,7 @@
             document.getElementById("menu").style.display = "none";
             document.querySelector(".welcome-box").style.display = "block";
             document.querySelector(".g-recaptcha").style.display = "block";
+            document.getElementById("qrcode").style.display = "flex";
         }
 
         // Funzione per mostrare/nascondere i piatti di una categoria
@@ -136,9 +167,33 @@
             const categoryElement = document.querySelector(`[data-category="${category}"]`);
             categoryElement.classList.toggle("active");
         }
+
+        // Funzione per aggiornare la risoluzione e generare il QR code
+        function updateResolutionAndQRCode() {
+            const resolutionWidget = document.getElementById("resolution-widget");
+            const qrcodeContainer = document.getElementById("qrcode");
+
+            // Ottieni la risoluzione della pagina
+            const width = window.innerWidth;
+            const height = window.innerHeight;
+            resolutionWidget.textContent = `Risoluzione: ${width}x${height}`;
+
+            // Genera il QR code con la risoluzione come contenuto
+            qrcodeContainer.innerHTML = ""; // Pulisci il contenuto precedente
+            QRCode.toCanvas(
+                `Risoluzione: ${width}x${height}`,
+                { width: Math.min(200, width * 0.3), margin: 1 },
+                (error, canvas) => {
+                    if (error) console.error(error);
+                    qrcodeContainer.appendChild(canvas);
+                }
+            );
+        }
+
+        // Aggiorna la risoluzione e il QR code al caricamento della pagina e al ridimensionamento
+        window.addEventListener("load", updateResolutionAndQRCode);
+        window.addEventListener("resize", updateResolutionAndQRCode);
     </script>
-    <!-- Includi lo script di reCAPTCHA -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </head>
 <body>
     <!-- Pagina di benvenuto -->
@@ -150,6 +205,12 @@
 
     <!-- CAPTCHA al di fuori della forma geometrica -->
     <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+
+    <!-- QR code -->
+    <div id="qrcode"></div>
+
+    <!-- Widget per la risoluzione -->
+    <div class="resolution-widget" id="resolution-widget"></div>
 
     <!-- Pagina del menu -->
     <div id="menu">
@@ -213,6 +274,8 @@
         </div>
         <!-- Pulsante per tornare alla pagina di benvenuto -->
         <button onclick="goBackToWelcome()" style="margin-top: 20px;">Torna alla pagina di benvenuto</button>
+        <!-- QR code nella pagina del menu -->
+        <div id="qrcode-menu" style="margin-top: 20px;"></div>
     </div>
 </body>
 </html>
