@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagina di Benvenuto</title>
+    <style>
+        /* Stili comuni */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            background-color: #800020; /* Sfondo bordeaux */
+            font-family: 'Georgia', serif;
+            color: white;
+        }
+
+        .welcome-box, .menu-container {
+            background-color: rgba(80, 0, 20, 0.9); /* Colore più scuro con trasparenza */
+            padding: 40px 60px;
+            border-radius: 25px; /* Bordi arrotondati */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5); /* Ombreggiatura */
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin: 0;
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.6);
+        }
+
+        p {
+            font-size: 1.2rem;
+            margin-top: 15px;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
+            font-style: italic;
+        }
+
+        button {
+            background-color: #600016;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+            margin-top: 20px; /* Spazio tra il sottotitolo e il pulsante */
+        }
+
+        button:hover {
+            background-color: #70001a;
+        }
+
+        .g-recaptcha {
+            margin-top: 30px; /* Spazio tra il pulsante e il CAPTCHA */
+        }
+
+        /* Stile per il menu */
+        #menu {
+            display: none; /* Nascondi inizialmente */
+        }
+
+        .menu-container {
+            width: 400px;
+            padding: 20px;
+        }
+
+        .menu-container h2 {
+            font-size: 2.5rem; /* Titolo "Menu Alimenti" più grande */
+            margin-bottom: 20px;
+        }
+
+        .category {
+            margin-bottom: 10px;
+            width: 100%;
+            text-align: left;
+        }
+
+        .category-button {
+            background-color: #600016;
+            color: white;
+            border: none;
+            padding: 15px;
+            border-radius: 15px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            width: 100%;
+            text-align: left;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            transition: background-color 0.3s ease;
+        }
+
+        .category-button:hover {
+            background-color: #70001a;
+        }
+
+        .category-items {
+            display: none; /* Nascondi i piatti inizialmente */
+            margin-top: 10px;
+            padding-left: 20px;
+        }
+
+        .category.active .category-items {
+            display: block; /* Mostra i piatti */
+        }
+
+        .food-item {
+            margin-top: 10px;
+            font-size: 1rem;
+            color: white;
+        }
+    </style>
+    <script>
+        // Funzione per passare alla pagina del menu
+        function goToMenu() {
+            document.querySelector(".welcome-box").style.display = "none";
+            document.querySelector(".g-recaptcha").style.display = "none";
+            document.getElementById("menu").style.display = "block";
+        }
+
+        // Funzione per tornare alla pagina di benvenuto
+        function goBackToWelcome() {
+            document.getElementById("menu").style.display = "none";
+            document.querySelector(".welcome-box").style.display = "block";
+            document.querySelector(".g-recaptcha").style.display = "block";
+        }
+
+        // Funzione per mostrare/nascondere i piatti di una categoria
+        function toggleCategory(category) {
+            const categoryElement = document.querySelector(`[data-category="${category}"]`);
+            categoryElement.classList.toggle("active");
+        }
+    </script>
+    <!-- Includi lo script di reCAPTCHA -->
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+</head>
+<body>
+    <!-- Pagina di benvenuto -->
+    <div class="welcome-box">
+        <h1>Benvenuto!</h1>
+        <p>Ogni grande avventura inizia con un semplice passo. E il tuo inizia qui, con noi!</p>
+        <button onclick="goToMenu()">Vai al Menu</button>
+    </div>
+
+    <!-- CAPTCHA al di fuori della forma geometrica -->
+    <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+
+    <!-- Pagina del menu -->
+    <div id="menu">
+        <div class="menu-container">
+            <h2>Menu Alimenti</h2>
+            <!-- Categorie di alimenti -->
+            <div class="category" data-category="antipasti">
+                <button class="category-button" onclick="toggleCategory('antipasti')">Antipasti</button>
+                <div class="category-items">
+                    <div class="food-item">Bruschetta al pomodoro</div>
+                    <div class="food-item">Insalata Caprese</div>
+                    <div class="food-item">Prosciutto e Melone</div>
+                    <div class="food-item">Carpaccio di Manzo</div>
+                    <div class="food-item">Frittelle di Verdure</div>
+                </div>
+            </div>
+
+            <div class="category" data-category="primi">
+                <button class="category-button" onclick="toggleCategory('primi')">Primi Piatti</button>
+                <div class="category-items">
+                    <div class="food-item">Spaghetti alla Carbonara</div>
+                    <div class="food-item">Penne all'Arrabbiata</div>
+                    <div class="food-item">Risotto ai Funghi</div>
+                    <div class="food-item">Lasagna al Forno</div>
+                    <div class="food-item">Gnocchi al Pesto</div>
+                </div>
+            </div>
+
+            <div class="category" data-category="secondi">
+                <button class="category-button" onclick="toggleCategory('secondi')">Secondi Piatti</button>
+                <div class="category-items">
+                    <div class="food-item">Bistecca alla Fiorentina</div>
+                    <div class="food-item">Pollo alla Cacciatora</div>
+                    <div class="food-item">Branzino al Forno</div>
+                    <div class="food-item">Ossobuco alla Milanese</div>
+                    <div class="food-item">Cotoletta alla Milanese</div>
+                </div>
+            </div>
+
+            <div class="category" data-category="bibite">
+                <button class="category-button" onclick="toggleCategory('bibite')">Bibite</button>
+                <div class="category-items">
+                    <div class="food-item">Acqua Naturale</div>
+                    <div class="food-item">Vino Rosso</div>
+                    <div class="food-item">Birra Artigianale</div>
+                    <div class="food-item">Limonata</div>
+                    <div class="food-item">Succo di Frutta</div>
+                </div>
+            </div>
+
+            <div class="category" data-category="dessert">
+                <button class="category-button" onclick="toggleCategory('dessert')">Dessert</button>
+                <div class="category-items">
+                    <div class="food-item">Tiramisù</div>
+                    <div class="food-item">Panna Cotta</div>
+                    <div class="food-item">Cheesecake ai Frutti di Bosco</div>
+                    <div class="food-item">Sorbetto al Limone</div>
+                    <div class="food-item">Cannolo Siciliano</div>
+                </div>
+            </div>
+        </div>
+        <!-- Pulsante per tornare alla pagina di benvenuto -->
+        <button onclick="goBackToWelcome()" style="margin-top: 20px;">Torna alla pagina di benvenuto</button>
+    </div>
+</body>
+</html>
